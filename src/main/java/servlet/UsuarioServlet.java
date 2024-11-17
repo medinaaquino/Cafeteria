@@ -23,7 +23,7 @@ public class UsuarioServlet extends HttpServlet {
             throws ServletException, IOException {
       //  processRequest(request, response);
       
-       response.sendRedirect("IngresarUsuario.jsp");
+     //  response.sendRedirect("IngresarUsuario.jsp");
     }
 
 
@@ -54,7 +54,7 @@ public class UsuarioServlet extends HttpServlet {
                 em.getTransaction().begin();
                 em.persist(nuevoUsuario);
                 em.getTransaction().commit();
-                RequestDispatcher dispatcher = request.getRequestDispatcher("IngresarUsuario.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
                 dispatcher.forward(request, response);
 
             } else if ("update".equals(action)) {

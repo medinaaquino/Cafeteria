@@ -4,14 +4,19 @@
  */
 package servlet;
 
+
+import controladores.UsuarioJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import modelos.Usuario;
 /**
  *
  * @author Edgar
@@ -19,69 +24,48 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "loginServlet", urlPatterns = {"/loginServlet"})
 public class loginServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet loginServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet loginServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("PU");
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.sendRedirect("login.jsp");
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        // Obtener los datos del formulario
+        String email = request.getParameter("email");  // Correo electrónico en lugar de 'username'
+        String password = request.getParameter("password");
+
+        UsuarioJpaController usuarioJpaController = new UsuarioJpaController(emf);
+
+        // Usar el método de UsuarioJpaController para validar al usuario y obtener su rol
+        String role = usuarioJpaController.validateUserAndGetRole(email, password);  // Método modificado
+
+        // Si el usuario existe y la contraseña es correcta
+        if (role != null) {
+            // Si el rol es 'admin', redirigir al inicio del administrador
+            if ("Administrador".equals(role)) {
+                response.sendRedirect("menuAdmin.jsp");
+               // response.sendRedirect("menuAdmin.jsp");
+            }
+            // Si el rol es 'user', redirigir al inicio del usuario
+            else if ("Usuario".equals(role)) {
+                response.sendRedirect("menu.jsp");
+            }
+        } else {
+            // Si el login falla, enviar un mensaje de error
+            request.setAttribute("errorMessage", "Correo electrónico o contraseña incorrectos");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+            dispatcher.forward(request, response);
+        }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet de login que valida el usuario por correo electrónico y redirige según el rol";
+    }
 }

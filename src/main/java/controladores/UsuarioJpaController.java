@@ -257,4 +257,33 @@ public class UsuarioJpaController implements Serializable {
         }
     }
     
+public String validateUserAndGetRole(String email, String password) {
+    EntityManager em = null;
+    try {
+        em = getEntityManager();
+        // Buscar el usuario por su correo electrónico
+        Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.email = :email");
+        query.setParameter("email", email);  // Cambié 'username' por 'email'
+        List<Usuario> resultList = query.getResultList();
+
+        if (!resultList.isEmpty()) {
+            Usuario usuario = resultList.get(0);
+            // Aquí puedes agregar el código para comparar las contraseñas de forma segura
+            // Suponiendo que la contraseña esté almacenada en texto claro (aunque NO se recomienda)
+            if (usuario.getContra().equals(password)) {
+                // Si la contraseña es válida, obtener el rol
+                return usuario.getRol();  // Devuelve el rol del usuario
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        if (em != null) {
+            em.close();
+        }
+    }
+    return null; // Si no se encuentra el usuario o la contraseña es incorrecta
+}
+
+
 }

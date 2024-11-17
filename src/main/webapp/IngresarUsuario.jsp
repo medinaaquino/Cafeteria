@@ -104,8 +104,30 @@
 
             h1, h2 {
                 font-size: 24px;
-                
             }
+        }
+
+        /* Link styles */
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .login-link a {
+            color: #6a4f39;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Flex container for button and link */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     </style>
 </head>
@@ -142,8 +164,13 @@
                 <option value="Usuario">Usuario</option>
             </select>
 
-            <!-- Botón para enviar el formulario -->
-            <button type="submit" class="button">Agregar Usuario</button>
+            <!-- Botones de acción -->
+            <div class="form-actions">
+                <button type="submit" class="button">Agregar Usuario</button>
+                <div class="login-link">
+                    <p>¿Ya tienes una cuenta? <a href="login.jsp">Regresar al login</a></p>
+                </div>
+            </div>
         </form>
     </div>
 </body>
