@@ -45,11 +45,11 @@
                 %>
                 <tr>
                     <td><%= contador %></td>
-                    <td><%= producto.getNombre() %></td>
+                    <td><%= producto.getNombreProducto() %></td>
                     <td><%= "$" + String.format("%.2f", producto.getPrecio()) %></td>
-                    <td><%= producto.getTamano() %></td>
-                    <td><%= producto.getPromocion() %></td>
-                    <td><img src="<%= producto.getImagenURL() %>" alt="<%= producto.getNombre() %>" width="50" height="50"></td>
+                    <td><%= producto.getTamaño() %></td>
+                    <td><%= producto.getPromoción() %></td>
+                    <td><img src="<%= producto.getImagenURL() %>" alt="<%= producto.getNombreProducto() %>" width="50" height="50"></td>
                     <td>
                         <button onclick="decrement(<%= contador %>)">-</button>
                         <input type="number" id="numberField_<%= contador %>" value="1" min="1" style="width: 50px; text-align: center;" readonly>
